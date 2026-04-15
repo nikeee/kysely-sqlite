@@ -1,0 +1,85 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-slim
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 25
+          cache: npm
+
+      - run: npm ci --no-audit
+      - run: npm run test:coverage
+
+  docs-build:
+    name: Build Docs
+    runs-on: ubuntu-slim
+    needs:
+      - test
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 25
+          cache: npm
+
+      - run: npm ci --no-audit
+      - run: npm run docs
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./docs
+
+  docs-deploy:
+    name: Deploy Docs
+    runs-on: ubuntu-slim
+
+    permissions:
+      pages: write
+      id-token: write
+
+    needs:
+      - docs-build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-slim
+
+    needs:
+      - docs-deploy
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 25
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+      - run: npm ci --no-audit
+      - run: npm run build
+      - run: npm publish --provenance --access public

@@ -1,0 +1,47 @@
+{
+  "name": "kysely-sqlite",
+  "version": "0.1.0",
+  "description": "Use Kysely with the Node.js native sqlite module",
+  "keywords": [
+    "kysely",
+    "node",
+    "sqlite"
+  ],
+  "license": "MIT",
+  "author": "Niklas Mollenhauer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikeee/kysely-sqlite.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "scripts": {
+    "build": "tsdown",
+    "ci": "oxlint --type-aware --type-check --deny-warnings -f github",
+    "docs": "typedoc",
+    "format": "oxfmt",
+    "lint": "oxlint --type-aware",
+    "lint:fix": "oxlint --type-aware --fix",
+    "test": "tsc --noEmit && node --test",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "oxfmt": "^0.45.0",
+    "oxlint": "^1.60.0",
+    "oxlint-tsgolint": "^0.21.0",
+    "tsdown": "^0.21.7",
+    "typedoc": "^0.28.19",
+    "typescript": "^6.0.2"
+  },
+  "peerDependencies": {
+    "kysely": "*"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
