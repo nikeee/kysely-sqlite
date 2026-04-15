@@ -1,6 +1,6 @@
 {
   "name": "kysely-sqlite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Use Kysely with the Node.js native sqlite module",
   "keywords": [
     "kysely",
